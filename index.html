@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#6366f1">
+<title>Temu Kawan Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --p1:#6366f1;--p2:#8b5cf6;--p3:#ec4899;
+  --bg:#f7f8fc;--card:#fff;--txt:#1e293b;--muted:#94a3b8;
+  --border:#e2e8f0;--ok:#10b981;--err:#ef4444;
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  --shadow:0 4px 20px rgba(99,102,241,.08);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:100px;overflow-x:hidden}
+#app{max-width:560px;margin:0 auto;padding:12px}
+input,textarea,button{font-family:inherit;outline:none;border:none;background:none;color:inherit}
+button{cursor:pointer;transition:transform .12s,opacity .15s}
+button:active{transform:scale(.96)}
+.signature{position:fixed;bottom:70px;left:0;right:0;text-align:center;font-size:11px;
+  color:var(--muted);padding:6px;pointer-events:none;z-index:5;letter-spacing:.3px}
+.signature b{background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;font-weight:800;letter-spacing:.5px}
+.header{background:var(--card);border-radius:20px;padding:14px 18px;
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  box-shadow:var(--shadow);position:sticky;top:12px;z-index:20}
+.logo{font-size:22px;font-weight:900;flex:1;background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}
+.logo-sub{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;margin-top:-4px}
+.avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:20px;cursor:pointer;flex-shrink:0;
+  border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.12);
+  background:var(--grad);color:#fff;font-weight:700;position:relative;transition:transform .15s}
+.avatar.sm{width:34px;height:34px;font-size:17px}
+.avatar.xs{width:26px;height:26px;font-size:13px;border-width:2px}
+.avatar.lg{width:88px;height:88px;font-size:44px;border-width:4px}
+.avatar.online::after{content:'';position:absolute;bottom:0;right:0;
+  width:11px;height:11px;border-radius:50%;background:var(--ok);border:2.5px solid #fff}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:#f1f5f9;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  position:relative;flex-shrink:0}
+.badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;
+  background:var(--err);color:#fff;border-radius:9px;font-size:10px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:30;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);padding:6px 0 max(6px,env(safe-area-inset-bottom))}
+.bottomnav .inner{max-width:560px;margin:0 auto;display:flex;position:relative}
+.navbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px;color:var(--muted);font-size:10px;font-weight:700;position:relative}
+.navbtn .ic{font-size:22px;line-height:1;transition:transform .2s}
+.navbtn.active{color:var(--p1)}
+.navbtn.active .ic{transform:translateY(-2px)}
+.navbtn.create{flex:0 0 64px}
+.navbtn.create .ic{width:46px;height:46px;background:var(--grad);color:#fff;
+  border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:900;margin-top:-14px;
+  box-shadow:0 6px 18px rgba(139,92,246,.4);border:3px solid #fff}
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:var(--grad)}
+.auth-card{background:#fff;border-radius:28px;padding:34px 26px;max-width:420px;
+  width:100%;box-shadow:0 30px 60px rgba(0,0,0,.25);text-align:center}
+.auth-logo{font-size:38px;font-weight:900;margin-bottom:6px;background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1.5px}
+.auth-tag{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:24px}
+.field{width:100%;padding:14px 18px;background:#f8fafc;border:2px solid #f1f5f9;
+  border-radius:16px;font-size:15px;margin-bottom:12px;transition:border .15s,background .15s}
+.field:focus{border-color:var(--p1);background:#fff}
+.emoji-pick{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-bottom:18px}
+.emoji-pick button{font-size:20px;background:#f8fafc;border:2px solid transparent;
+  border-radius:11px;padding:6px;transition:all .12s}
+.emoji-pick button.sel{border-color:var(--p1);background:#eef2ff;transform:scale(1.08)}
+.btn{width:100%;padding:14px;background:var(--grad);color:#fff;border-radius:16px;
+  font-weight:800;font-size:15px;letter-spacing:.3px;
+  box-shadow:0 8px 20px rgba(139,92,246,.35)}
+.btn:disabled{opacity:.5;box-shadow:none}
+.btn.sec{background:#f1f5f9;color:var(--txt);box-shadow:none}
+.link{color:var(--p1);font-weight:700;cursor:pointer}
+.card{background:var(--card);border-radius:20px;padding:14px 16px;margin-bottom:12px;
+  box-shadow:var(--shadow);animation:fadeIn .3s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ct{display:flex;gap:10px;align-items:center;padding:12px 14px;background:#fff;
+  border-radius:20px;margin-bottom:14px;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s}
+.ct:hover{transform:translateY(-1px)}
+.ct .fake{flex:1;background:#f1f5f9;border-radius:22px;padding:11px 16px;color:var(--muted);font-size:14px}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tab{flex:1;padding:10px;border-radius:14px;font-weight:700;font-size:13px;
+  background:#f1f5f9;color:var(--muted);transition:all .15s}
+.tab.active{background:var(--grad);color:#fff;box-shadow:0 4px 12px rgba(139,92,246,.3)}
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.post-head .info{flex:1;min-width:0}
+.post-head .name{font-weight:800;font-size:14px;cursor:pointer}
+.post-head .time{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.post-text{font-size:14.5px;line-height:1.55;margin-bottom:10px;word-wrap:break-word;white-space:pre-wrap}
+.post-img{width:100%;border-radius:14px;margin-bottom:10px;display:block;
+  max-height:480px;object-fit:cover;background:#f1f5f9}
+.post-actions{display:flex;gap:6px;padding-top:10px;border-top:1px solid #f1f5f9}
+.act{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:8px;border-radius:12px;font-size:13px;font-weight:700;color:#64748b;transition:all .15s}
+.act:hover{background:#f8fafc}
+.act.liked{color:var(--p3)}
+.act.liked span:first-child{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.4)}}
+.comments{display:none;margin-top:10px;padding-top:10px;border-top:1px solid #f1f5f9}
+.comments.open{display:block}
+.cmt{display:flex;gap:8px;margin-bottom:8px;font-size:13px}
+.cmt .body{background:#f8fafc;border-radius:14px;padding:8px 12px;flex:1}
+.cmt .body b{display:block;font-size:12px;color:var(--p1);margin-bottom:2px}
+.cmt-input{display:flex;gap:8px;margin-top:8px}
+.cmt-input input{flex:1;background:#f1f5f9;border-radius:20px;padding:10px 16px;font-size:13px}
+.cmt-input button{width:40px;height:40px;border-radius:50%;background:var(--grad);
+  color:#fff;font-size:16px;flex-shrink:0}
+.empty{text-align:center;padding:50px 24px;color:var(--muted)}
+.empty .big{font-size:56px;margin-bottom:12px;opacity:.5}
+.empty h4{font-size:15px;font-weight:800;color:var(--txt);margin-bottom:6px}
+.empty p{font-size:13px;line-height:1.5}
+.user-row{display:flex;align-items:center;gap:12px;padding:12px;background:#fff;
+  border-radius:16px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);
+  cursor:pointer;transition:transform .15s}
+.user-row:hover{transform:translateX(2px)}
+.user-row .info{flex:1;min-width:0}
+.user-row .name{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px}
+.user-row .bio{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;margin-top:2px}
+.mini-btn{padding:7px 16px;border-radius:16px;font-weight:800;font-size:12px;
+  background:var(--grad);color:#fff;flex-shrink:0}
+.mini-btn.following{background:#f1f5f9;color:var(--txt)}
+.mini-btn.following:hover{background:#fee;color:var(--err)}
+.chat-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#fff;
+  border-radius:20px;margin-bottom:12px;box-shadow:var(--shadow);
+  position:sticky;top:12px;z-index:20}
+.chat-header .name{font-weight:800;font-size:15px}
+.chat-header .sub{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.chat-header .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.chat-header .dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.back-btn{font-size:22px;padding:4px 8px;color:var(--txt);font-weight:300}
+.chat-body{background:#fff;border-radius:20px;padding:16px;box-shadow:var(--shadow);
+  min-height:420px;max-height:62vh;overflow-y:auto;display:flex;
+  flex-direction:column;gap:6px;scroll-behavior:smooth}
+.chat-body::-webkit-scrollbar{width:4px}
+.chat-body::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:2px}
+.bubble{max-width:78%;padding:10px 14px;border-radius:20px;font-size:14px;
+  line-height:1.4;word-wrap:break-word;animation:fadeIn .2s;position:relative}
+.bubble.me{background:var(--grad);color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.bubble.them{background:#f1f5f9;color:var(--txt);align-self:flex-start;border-bottom-left-radius:6px}
+.bubble .t{font-size:10px;opacity:.65;margin-top:4px;display:block;text-align:right}
+.bubble .seen{font-size:10px;opacity:.9;margin-left:4px}
+.bubble img,.bubble audio{max-width:100%;border-radius:12px;display:block;margin-bottom:4px}
+.bubble audio{width:220px}
+.typing-ind{align-self:flex-start;background:#f1f5f9;border-radius:20px;
+  padding:12px 18px;display:flex;gap:4px;align-items:center}
+.typing-ind .d{width:6px;height:6px;background:var(--muted);border-radius:50%;
+  animation:typing 1.2s infinite}
+.typing-ind .d:nth-child(2){animation-delay:.15s}
+.typing-ind .d:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+.chat-input-row{display:flex;gap:8px;margin-top:12px;padding:6px;background:#fff;
+  border-radius:24px;box-shadow:var(--shadow);align-items:center}
+.chat-input-row input{flex:1;padding:12px 16px;font-size:14px;background:transparent}
+.chat-input-row .sm-btn{width:40px;height:40px;border-radius:50%;background:#f1f5f9;
+  font-size:17px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.chat-input-row .sm-btn.rec{background:#ef4444;color:#fff;animation:recPulse 1s infinite}
+@keyframes recPulse{50%{transform:scale(1.1)}}
+.chat-input-row .send{width:44px;height:44px;border-radius:50%;background:var(--grad);
+  color:#fff;font-size:18px;flex-shrink:0;box-shadow:0 4px 12px rgba(139,92,246,.35)}
+.chat-badge{display:inline-block;background:var(--err);color:#fff;font-size:10px;
+  font-weight:800;padding:2px 6px;border-radius:8px;margin-left:6px}
+.profile-hero{background:var(--grad);border-radius:24px;padding:24px;margin-bottom:14px;
+  text-align:center;color:#fff;position:relative;overflow:hidden}
+.profile-hero::before{content:'';position:absolute;top:-50%;left:-20%;width:200%;height:200%;
+  background:radial-gradient(circle,rgba(255,255,255,.15),transparent 60%);
+  animation:shine 8s linear infinite}
+@keyframes shine{to{transform:rotate(360deg)}}
+.profile-hero .avatar{margin:0 auto 12px;border-color:rgba(255,255,255,.5);
+  background:rgba(255,255,255,.2);backdrop-filter:blur(10px);position:relative;z-index:1}
+.profile-hero .pname{font-size:22px;font-weight:900;margin-bottom:4px;position:relative;z-index:1}
+.profile-hero .pbio{font-size:13px;opacity:.9;margin-bottom:18px;position:relative;z-index:1}
+.stats{display:flex;justify-content:space-around;position:relative;z-index:1}
+.stat{cursor:pointer;padding:4px 12px;border-radius:12px;transition:background .15s}
+.stat:hover{background:rgba(255,255,255,.15)}
+.stat .n{font-size:20px;font-weight:900}
+.stat .l{font-size:11px;opacity:.85;letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:100;padding:16px;overflow-y:auto}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:24px;padding:24px;max-width:440px;width:100%;
+  margin:auto;animation:slideUp .25s;max-height:90vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.modal h3{margin-bottom:16px;font-size:18px;text-align:center;font-weight:800}
+.modal label{font-size:12px;font-weight:800;color:#64748b;display:block;margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.5px}
+.img-prev{position:relative;margin-bottom:12px;display:none}
+.img-prev.show{display:block}
+.img-prev img{width:100%;border-radius:14px;max-height:280px;object-fit:cover}
+.img-prev button{position:absolute;top:8px;right:8px;width:30px;height:30px;
+  background:rgba(0,0,0,.6);color:#fff;border-radius:50%;font-size:14px}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#1e293b;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;
+  font-weight:600;z-index:200;opacity:0;transition:all .3s;pointer-events:none;
+  white-space:nowrap;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90vw;
+  overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.section-title{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.8px;padding:8px 4px;display:flex;align-items:center;gap:6px}
+.section-title .num{background:var(--p1);color:#fff;font-size:10px;padding:1px 7px;border-radius:8px}
+.notif{display:flex;gap:10px;padding:12px;background:#fff;border-radius:14px;
+  margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);cursor:pointer;
+  transition:transform .15s;border-left:3px solid transparent}
+.notif.unread{border-left-color:var(--p1);background:#f8f8ff}
+.notif .body{flex:1;font-size:13px;line-height:1.5}
+.notif .body b{color:var(--p1)}
+.notif .t{font-size:11px;color:var(--muted);margin-top:3px}
+.stories{display:flex;gap:10px;overflow-x:auto;padding:6px 0 14px;margin-bottom:8px;scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.story-item{flex-shrink:0;text-align:center;cursor:pointer;width:68px}
+.story-ring{width:64px;height:64px;border-radius:50%;padding:3px;
+  background:linear-gradient(135deg,#f59e0b,#ec4899,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;position:relative}
+.story-ring.seen{background:#e2e8f0}
+.story-ring .avatar{width:100%;height:100%;font-size:26px;border:none;box-shadow:none;
+  background:#fff;color:var(--txt)}
+.story-ring .plus{position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;
+  background:var(--grad);color:#fff;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:900;border:2.5px solid #fff}
+.story-item .lbl{font-size:11px;color:var(--txt);font-weight:600;margin-top:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.story-view{position:fixed;inset:0;background:#000;z-index:300;
+  display:flex;flex-direction:column;align-items:center;justify-content:center}
+.story-view .bar{position:absolute;top:0;left:0;right:0;padding:14px;display:flex;gap:4px;z-index:2}
+.story-view .bar .seg{flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:2px;overflow:hidden}
+.story-view .bar .seg .fill{height:100%;background:#fff;width:0}
+.story-view .head{position:absolute;top:26px;left:14px;right:14px;
+  display:flex;align-items:center;gap:10px;color:#fff;z-index:2}
+.story-view .head .name{font-weight:800;font-size:14px}
+.story-view .head .time{font-size:11px;opacity:.7}
+.story-view .close{position:absolute;top:26px;right:14px;color:#fff;font-size:26px;z-index:3}
+.story-view .content{max-width:100%;max-height:70vh;padding:40px;
+  display:flex;align-items:center;justify-content:center}
+.story-view .content .big{font-size:120px}
+.story-view .caption{position:absolute;bottom:80px;left:20px;right:20px;color:#fff;
+  text-align:center;font-size:18px;font-weight:600;padding:16px;
+  background:rgba(0,0,0,.4);border-radius:16px;backdrop-filter:blur(8px)}
+.video-call{position:fixed;inset:0;background:#000;z-index:400;display:flex;
+  flex-direction:column;color:#fff}
+.video-call .stage{flex:1;position:relative;overflow:hidden}
+.video-call .remote{width:100%;height:100%;object-fit:cover;background:#111}
+.video-call .local{position:absolute;top:20px;right:20px;width:120px;height:160px;
+  object-fit:cover;border-radius:16px;border:3px solid rgba(255,255,255,.3);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);transform:scaleX(-1)}
+.video-call .local.no-mirror{transform:none}
+.video-call .controls{position:absolute;bottom:30px;left:0;right:0;
+  display:flex;justify-content:center;gap:16px;z-index:5}
+.video-call .ctrl{width:60px;height:60px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  background:rgba(255,255,255,.2);backdrop-filter:blur(10px);color:#fff;
+  border:2px solid rgba(255,255,255,.3)}
+.video-call .ctrl.end{background:#ef4444;border-color:#ef4444}
+.video-call .ctrl.mute{background:#f59e0b;border-color:#f59e0b}
+.video-call .info{position:absolute;top:24px;left:24px;z-index:5;
+  text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.video-call .info .name{font-size:18px;font-weight:800}
+.video-call .info .status{font-size:13px;opacity:.85;margin-top:3px}
+.video-call .waiting{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;flex-direction:column;gap:16px;background:#111}
+.video-call .waiting .avatar{width:100px;height:100px;font-size:50px}
+.video-call .waiting .txt{color:#fff;font-size:15px;opacity:.8}
+.recording-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:400;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:20px}
+.recording-overlay .big{font-size:80px;animation:recPulse 1s infinite}
+.recording-overlay .timer{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums}
+.recording-overlay .hint{font-size:13px;opacity:.7}
+.recording-overlay .stop-btn{background:#ef4444;color:#fff;padding:16px 40px;
+  border-radius:40px;font-weight:800;font-size:16px;box-shadow:0 8px 24px rgba(239,68,68,.4)}
+.group-item{background:#fff;border-radius:16px;padding:12px;margin-bottom:8px;
+  display:flex;gap:12px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.04);cursor:pointer}
+.group-item .gic{width:48px;height:48px;border-radius:16px;background:var(--grad);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.group-item .info{flex:1;min-width:0}
+.group-item .name{font-weight:800;font-size:14px}
+.group-item .sub{font-size:12px;color:var(--muted);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-stat{background:#fff;border-radius:16px;padding:16px;text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.admin-stat .n{font-size:26px;font-weight:900;background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.admin-stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.5px;margin-top:4px;font-weight:700}
+.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.verify-badge{background:#dcfce7;color:#15803d;font-size:9px;padding:1px 6px;
+  border-radius:6px;font-weight:800;margin-left:4px}
+.admin-badge{background:var(--grad);color:#fff;font-size:9px;padding:1px 6px;
+  border-radius:6px;font-weight:800;margin-left:4px}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div class="signature">Dibuat dengan <span style="color:#ec4899">❤</span> oleh <b>SHANK ANGGARA</b></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   TEMU KAWAN PRO
+   Created by Shank Anggara
+   Fitur: Realtime, Voice Note, Foto Chat, Grup, Video Call,
+          Email, Admin Panel
+============================================================ */
+
+const AVATARS = ['😀','😎','🐱','🐶','🦊','🐼','🦁','🐸','🐧','🦄','👽','🤖','🐯','🐨','🐵','🐷','🐮','🦉','🦋','🐙','🌸','⭐','🔥','💎'];
+const BOT_REPLIES = [
+  'Hai juga! 👋','Wah keren!','Iya bener 😄','Haha lucu 😆','Oh gitu ya!',
+  'Setuju 👍','Boleh tanya nanti?','Nanti aku balas ya','Sip! 🙌','Mantap!',
+  'Aku juga suka itu','Foto kamu bagus 📸','Semangat 💪','Wkwkwk 😂','Noted 📝'
+];
+const BOT_DATA = [
+  { name:'Andi Pratama',   email:'andi@demo.com',   avatar:'🐱', bio:'Kopi & coding ☕💻', post:'Baru selesai bikin fitur realtime! 🎉' },
+  { name:'Sari Dewi',      email:'sari@demo.com',   avatar:'🦊', bio:'Traveler & fotografer 📸', post:'Sunset di pantai keren parah 🌅' },
+  { name:'Budi Santoso',   email:'budi@demo.com',   avatar:'🐼', bio:'Gamer sejati 🎮', post:'Rank naik satu tier! Push rank 😅' },
+  { name:'Maya Anggraini', email:'maya@demo.com',   avatar:'🦄', bio:'Desainer grafis 🎨', post:'Belajar palet warna baru 🎨' },
+  { name:'Rizki Maulana',  email:'rizki@demo.com',  avatar:'🐧', bio:'Pecinta alam 🌲', post:'Minggu depan naik gunung 🏔️' },
+  { name:'Nina Lestari',   email:'nina@demo.com',   avatar:'🌸', bio:'Kopi & buku ☕📚', post:'Baru selesai baca buku bagus!' },
+];
+
+let state = null;
+let view = { screen:'feed', profileId:null, chatWith:null, groupId:null, feedTab:'all' };
+const TAB_ID = 'tab_' + Math.random().toString(36).slice(2,10);
+let pendingImage = null;
+let storyTimer = null;
+let mediaRecorder = null;
+let audioChunks = [];
+let recordingTimer = null;
+let recordingStart = 0;
+
+/* ---------- REALTIME ---------- */
+const channel = new BroadcastChannel('temu_kawan_pro_sync');
+channel.onmessage = (e) => {
+  if (e.data.from === TAB_ID) return;
+  state = loadState();
+  if (view.screen === 'chatroom') renderChatRoom($('pageBody'));
+  else if (view.screen === 'groupchat') renderGroupChat($('pageBody'));
+  else if (['feed','chat','notif','groups','admin'].includes(view.screen)) render();
+  else if (e.data.type === 'chat' || e.data.type === 'follow' || e.data.type === 'post') render();
+};
+
+function broadcast(type, payload) {
+  try { channel.postMessage({ type, payload, from: TAB_ID, at: Date.now() }); } catch(e){}
+  try { localStorage.setItem('_tkp_ping', TAB_ID + ':' + Date.now()); } catch(e) {}
+}
+window.addEventListener('storage', (e) => {
+  if (e.key === '_tkp_ping' && e.newValue && !e.newValue.startsWith(TAB_ID)) {
+    state = loadState();
+    if (['feed','chat','notif','groups','admin'].includes(view.screen)) render();
+    if (view.screen === 'chatroom') renderChatRoom($('pageBody'));
+  }
+});
+
+/* ---------- STORAGE ---------- */
+const STORE_KEY = 'temu_kawan_pro_v1';
+const SESSION_KEY = 'tkp_session_' + TAB_ID;
+
+function defaultState() {
+  return { v:1, users:{}, posts:[], chats:{}, groups:{}, notifications:{}, stories:{}, seeded:false };
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) { const d = JSON.parse(raw); if (d.v === 1) return d; }
+  } catch(e){}
+  return defaultState();
+}
+function saveState() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch(e) { toast('⚠️ Storage penuh'); }
+}
+const getMeId = () => sessionStorage.getItem(SESSION_KEY);
+const setMeId = id => id ? sessionStorage.setItem(SESSION_KEY, id) : sessionStorage.removeItem(SESSION_KEY);
+const me = () => state.users[getMeId()];
+const user = id => state.users[id];
+
+/* ---------- HELPERS ---------- */
+const $ = id => document.getElementById(id);
+const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+
+function timeAgo(t) {
+  const s = Math.floor((Date.now() - t) / 1000);
+  if (s < 5) return 'baru saja';
+  if (s < 60) return s + ' dtk';
+  if (s < 3600) return Math.floor(s/60) + ' mnt';
+  if (s < 86400) return Math.floor(s/3600) + ' jam';
+  if (s < 604800) return Math.floor(s/86400) + ' hr';
+  return new Date(t).toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+}
+function timeFull(t){ return new Date(t).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
+function isOnline(id){
+  const u = state.users[id]; if (!u) return false;
+  if (u.isBot) return true;
+  return Date.now() - (u.lastSeen || 0) < 45000;
+}
+function chatKey(a,b){ return [a,b].sort().join('__'); }
+function toast(msg){
+  const el = $('toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(()=>el.classList.remove('show'), 2000);
+}
+function playSound(){
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 800; o.type='sine';
+    g.gain.setValueAtTime(0.1, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+    o.start(); o.stop(ctx.currentTime + 0.2);
+  } catch(e){}
+}
+function resizeImg(file, maxW = 720, q = 0.72){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const sc = Math.min(1, maxW / img.width);
+        const c = document.createElement('canvas');
+        c.width = img.width * sc; c.height = img.height * sc;
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        res(c.toDataURL('image/jpeg', q));
+      };
+      img.onerror = rej; img.src = e.target.result;
+    };
+    r.onerror = rej; r.readAsDataURL(file);
+  });
+}
+
+/* ---------- SEED ---------- */
+function seed(){
+  if (state.seeded) return;
+  state.seeded = true;
+  // ADMIN account
+  state.users['admin'] = {
+    id:'admin', name:'👑 Shank Anggara', email:'shank@temukawan.app',
+    avatar:'👑', bio:'Pemilik & Founder Temu Kawan',
+    password:'admin123', isBot:false, isAdmin:true,
+    following:[], followers:[], joinedAt:Date.now(), lastSeen:Date.now()
+  };
+  BOT_DATA.forEach((b, i) => {
+    const id = 'bot' + i;
+    state.users[id] = {
+      id, name:b.name, email:b.email, avatar:b.avatar, bio:b.bio,
+      isBot:true, following:[], followers:[],
+      joinedAt: Date.now() - (i+1)*86400000, lastSeen:Date.now()
+    };
+  });
+  BOT_DATA.forEach((_, i) => {
+    for (let j = 0; j < BOT_DATA.length; j++) {
+      if (j !== i && Math.random() < 0.55) {
+        state.users['bot'+i].following.push('bot'+j);
+        state.users['bot'+j].followers.push('bot'+i);
+      }
+    }
+  });
+  BOT_DATA.forEach((b, i) => {
+    state.posts.push({
+      id: uid('p'), authorId:'bot'+i, text:b.post, image:null,
+      likes:[], comments:[], time: Date.now() - (i+1)*1800000
+    });
+  });
+  // Demo group
+  const gid = 'g_demo';
+  state.groups[gid] = {
+    id: gid, name:'🌟 Temu Kawan Umum', emoji:'🌟',
+    members:['admin','bot0','bot1','bot2'], admins:['admin'],
+    createdBy:'admin', createdAt: Date.now(),
+    messages: [{
+      id: uid('gm'), from:'admin',
+      text:'Selamat datang di grup umum! 👋',
+      time: Date.now() - 3600000
+    }]
+  };
+  saveState();
+}
+
+/* ---------- NOTIF ---------- */
+function pushNotif(userId, type, data){
+  if (!state.notifications[userId]) state.notifications[userId] = [];
+  state.notifications[userId].unshift({
+    id: uid('n'), type, ...data, time: Date.now(), read: false
+  });
+  if (state.notifications[userId].length > 60)
+    state.notifications[userId] = state.notifications[userId].slice(0, 60);
+}
+const unreadNotifs = id => (state.notifications[id] || []).filter(n => !n.read).length;
+
+/* ============================================================
+   AUTH
+============================================================ */
+function renderAuth(){
+  let picked = '😀';
+  let mode = 'login';
+  const app = $('app');
+  app.innerHTML = `<div class="auth-wrap"><div class="auth-card">
+    <div class="auth-logo">Temu Kawan</div>
+    <div class="auth-tag">Temukan kawan baru, mulai ngobrol ✨</div>
+    <div id="authForm"></div>
+  </div></div>`;
+  drawForm();
+
+  function drawForm(){
+    const f = $('authForm');
+    if (mode === 'login') {
+      f.innerHTML = `
+        <input class="field" id="aUser" placeholder="Username atau Email" autocomplete="off">
+        <input class="field" id="aPass" type="password" placeholder="Password">
+        <button class="btn" id="aBtn">Masuk 🚀</button>
+        <p style="margin-top:16px;font-size:13px;color:#94a3b8;">
+          Belum punya akun? <span class="link" id="goReg">Daftar</span>
+        </p>
+        <p style="margin-top:20px;padding-top:14px;border-top:1px solid #e2e8f0;font-size:11px;color:#94a3b8;text-align:left;">
+          <b>🔑 Demo login:</b><br>
+          Admin: <code>admin</code> / <code>admin123</code><br>
+          Bot: <code>andi@demo.com</code> / <code>12345</code>
+        </p>`;
+      $('aBtn').onclick = () => {
+        const key = $('aUser').value.trim();
+        const pass = $('aPass').value;
+        if (!key || !pass) return toast('Isi username & password');
+        const found = Object.values(state.users).find(u =>
+          (u.name.toLowerCase() === key.toLowerCase() ||
+           u.email?.toLowerCase() === key.toLowerCase() ||
+           u.id === key) && !u.isBot
+        ) || state.users[key];
+        if (!found) return toast('Akun tidak ditemukan');
+        if (found.password !== pass) return toast('Password salah');
+        setMeId(found.id); enterApp(found.name);
+      };
+      $('goReg').onclick = () => { mode = 'register'; drawForm(); };
+    } else {
+      f.innerHTML = `
+        <input class="field" id="aUser" placeholder="Username (unik, tanpa spasi)" maxlength="20" autocomplete="off">
+        <input class="field" id="aName" placeholder="Nama tampilan" maxlength="24">
+        <input class="field" id="aEmail" type="email" placeholder="Email" maxlength="60">
+        <input class="field" id="aPass" type="password" placeholder="Password (min 4 karakter)">
+        <input class="field" id="aBio" placeholder="Bio singkat (opsional)" maxlength="80">
+        <label style="font-size:12px;font-weight:800;color:#64748b;text-transform:uppercase;
+          letter-spacing:.5px;display:block;text-align:left;margin-bottom:8px;">Pilih avatar</label>
+        <div class="emoji-pick" id="aEmoji">
+          ${AVATARS.map((e,i)=>`<button data-e="${e}" class="${i===0?'sel':''}">${e}</button>`).join('')}
+        </div>
+        <button class="btn" id="aBtn">Daftar Sekarang ✨</button>
+        <p style="margin-top:16px;font-size:13px;color:#94a3b8;">
+          Sudah punya akun? <span class="link" id="goLog">Masuk</span>
+        </p>`;
+      $('aEmoji').onclick = e => {
+        const b = e.target.closest('button'); if (!b) return;
+        $('aEmoji').querySelectorAll('button').forEach(x=>x.classList.remove('sel'));
+        b.classList.add('sel'); picked = b.dataset.e;
+      };
+      $('aBtn').onclick = () => {
+        const username = $('aUser').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+        const name = $('aName').value.trim();
+        const email = $('aEmail').value.trim().toLowerCase();
+        const pass = $('aPass').value;
+        const bio = $('aBio').value.trim();
+        if (!username || username.length < 3) return toast('Username min 3 karakter');
+        if (!name) return toast('Isi nama tampilan');
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('Email tidak valid');
+        if (!pass || pass.length < 4) return toast('Password min 4 karakter');
+        if (state.users['u_'+username] || state.users[username]) return toast('Username sudah dipakai');
+        if (Object.values(state.users).some(u => u.email?.toLowerCase() === email))
+          return toast('Email sudah terdaftar');
+        const id = 'u_' + username;
+        state.users[id] = {
+          id, username, name, email, avatar: picked,
+          bio: bio || 'Hai! Saya pengguna baru Temu Kawan 👋',
+          password: pass, isBot: false, isAdmin: false,
+          following: ['bot0','bot1'], followers: [],
+          joinedAt: Date.now(), lastSeen: Date.now()
+        };
+        state.users['bot0'].followers.push(id);
+        state.users['bot1'].followers.push(id);
+        saveState(); broadcast('user');
+        setMeId(id); enterApp(name);
+      };
+      $('goLog').onclick = () => { mode = 'login'; drawForm(); };
+    }
+  }
+}
+
+function enterApp(name){
+  toast('Selamat datang, ' + name + '! 🎉');
+  view = { screen:'feed', profileId:null, chatWith:null, groupId:null, feedTab:'all' };
+  render();
+  setInterval(() => {
+    const id = getMeId(); if (!id || !state.users[id]) return;
+    state.users[id].lastSeen = Date.now(); saveState();
+  }, 15000);
+}
+
+/* ============================================================
+   RENDER UTAMA
+============================================================ */
+function render(){
+  seed();
+  if (!getMeId() || !state.users[getMeId()]) { renderAuth(); return; }
+  const id = getMeId();
+  state.users[id].lastSeen = Date.now();
+  saveState();
+
+  const app = $('app'); app.innerHTML = '';
+
+  const hdr = document.createElement('div');
+  hdr.className = 'header';
+  const unN = unreadNotifs(id);
+  const unC = totalUnreadChats();
+  const isAdmin = me().isAdmin;
+  hdr.innerHTML = `
+    <div style="flex:1">
+      <div class="logo">Temu Kawan${isAdmin?' 👑':''}</div>
+      <div class="logo-sub">Temukan & Ngobrol</div>
+    </div>
+    ${isAdmin ? `<button class="icon-btn" onclick="go('admin')" title="Admin Panel" style="background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff">👑</button>` : ''}
+    <button class="icon-btn" onclick="go('notif')">🔔${unN?`<span class="badge">${unN>9?'9+':unN}</span>`:''}</button>
+    <div class="avatar" onclick="go('profile')">${me().avatar}</div>
+  `;
+  app.appendChild(hdr);
+
+  const body = document.createElement('div');
+  body.id = 'pageBody';
+  app.appendChild(body);
+
+  if (view.screen === 'feed') renderFeed(body);
+  else if (view.screen === 'search') renderSearch(body);
+  else if (view.screen === 'chat') renderChatList(body);
+  else if (view.screen === 'chatroom') renderChatRoom(body);
+  else if (view.screen === 'groups') renderGroupsList(body);
+  else if (view.screen === 'groupchat') renderGroupChat(body);
+  else if (view.screen === 'profile') renderProfile(body, getMeId(), true);
+  else if (view.screen === 'userprofile') renderProfile(body, view.profileId, false);
+  else if (view.screen === 'notif') renderNotif(body);
+  else if (view.screen === 'admin') renderAdmin(body);
+
+  const nav = document.createElement('div');
+  nav.className = 'bottomnav';
+  nav.innerHTML = `<div class="inner">
+    <button class="navbtn ${view.screen==='feed'?'active':''}" onclick="go('feed')">
+      <span class="ic">🏠</span>Beranda</button>
+    <button class="navbtn ${view.screen==='search'?'active':''}" onclick="go('search')">
+      <span class="ic">🔍</span>Cari</button>
+    <button class="navbtn create" onclick="openCompose()"><span class="ic">+</span></button>
+    <button class="navbtn ${['chat','chatroom','groups','groupchat'].includes(view.screen)?'active':''}" onclick="go('chat')">
+      <span class="ic">💬</span>Chat${unC?`<span class="badge" style="top:6px;right:14px;">${unC>9?'9+':unC}</span>`:''}</button>
+    <button class="navbtn ${view.screen==='profile'?'active':''}" onclick="go('profile')">
+      <span class="ic">👤</span>Profil</button>
+  </div>`;
+  document.querySelectorAll('.bottomnav').forEach(n=>n.remove());
+  document.body.appendChild(nav);
+}
+
+function go(screen, opts = {}){
+  Object.assign(view, opts, { screen });
+  if (screen !== 'chatroom') view.chatWith = null;
+  if (screen !== 'groupchat') view.groupId = null;
+  render();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function totalUnreadChats(){
+  const id = getMeId(); let n = 0;
+  for (const k in state.chats){
+    if (!k.includes(id)) continue;
+    const msgs = state.chats[k] || [];
+    const last = msgs[msgs.length-1];
+    if (last && last.from !== id && !last.readBy?.[id]) n++;
+  }
+  return n;
+}
+
+/* ============================================================
+   FEED
+============================================================ */
+function renderFeed(root){
+  // Stories
+  const sw = document.createElement('div');
+  sw.className = 'stories';
+  const ids = [getMeId(), ...me().following];
+  ids.slice(0, 12).forEach(uid2 => {
+    const u = user(uid2); if (!u) return;
+    const hasS = (state.stories[uid2]||[]).filter(s => Date.now()-s.time < 86400000).length > 0;
+    const viewed = (state.stories[uid2]||[]).some(s => (s.seenBy||[]).includes(getMeId()));
+    const isMe = uid2 === getMeId();
+    const div = document.createElement('div');
+    div.className = 'story-item';
+    div.innerHTML = `<div class="story-ring ${hasS&&!viewed?'':'seen'}">
+      <div class="avatar">${u.avatar}</div>
+      ${isMe&&!hasS?'<div class="plus">+</div>':''}
+    </div><div class="lbl">${isMe?'Kamu':esc(u.name.split(' ')[0])}</div>`;
+    div.onclick = () => {
+      if (isMe) openStoryCreator();
+      else if (hasS) openStoryViewer(uid2);
+      else toast('Belum ada status');
+    };
+    sw.appendChild(div);
+  });
+  root.appendChild(sw);
+
+  const trig = document.createElement('div');
+  trig.className = 'ct';
+  trig.innerHTML = `<div class="avatar sm">${me().avatar}</div>
+    <div class="fake">Apa yang kamu pikirkan, ${esc(me().name.split(' ')[0])}?</div>
+    <span style="font-size:20px">📷</span>`;
+  trig.onclick = () => openCompose();
+  root.appendChild(trig);
+
+  const tabs = document.createElement('div');
+  tabs.className = 'tabs';
+  tabs.innerHTML = `
+    <button class="tab ${view.feedTab==='all'?'active':''}" onclick="view.feedTab='all';render()">🌏 Semua</button>
+    <button class="tab ${view.feedTab==='following'?'active':''}" onclick="view.feedTab='following';render()">👥 Mengikuti</button>`;
+  root.appendChild(tabs);
+
+  let posts = [...state.posts].sort((a,b)=>b.time-a.time);
+  if (view.feedTab === 'following') {
+    const f = me().following || [];
+    posts = posts.filter(p => f.includes(p.authorId) || p.authorId === getMeId());
+  }
+  if (!posts.length){
+    root.innerHTML += `<div class="empty"><div class="big">📭</div>
+      <h4>Belum ada postingan</h4><p>Ikuti orang lain atau buat postingan pertamamu!</p></div>`;
+    return;
+  }
+  posts.forEach(p => root.appendChild(buildPost(p)));
+}
+
+function buildPost(p){
+  const a = user(p.authorId); if (!a) return document.createElement('div');
+  const isMine = p.authorId === getMeId();
+  const liked = p.likes.includes(getMeId());
+  const el = document.createElement('div');
+  el.className = 'card';
+  const adminBadge = a.isAdmin ? '<span class="admin-badge">👑 OWNER</span>' : '';
+  const botBadge = a.isBot ? '<span class="verify-badge">✓ BOT</span>' : '';
+  el.innerHTML = `
+    <div class="post-head">
+      <div class="avatar ${isOnline(a.id)?'online':''}" onclick="go('userprofile',{profileId:'${a.id}'})">${a.avatar}</div>
+      <div class="info">
+        <div class="name" onclick="go('userprofile',{profileId:'${a.id}'})">${esc(a.name)}${adminBadge}${botBadge}</div>
+        <div class="time">${timeAgo(p.time)}</div>
+      </div>
+      ${isMine||me().isAdmin ? `<button class="icon-btn" style="width:32px;height:32px;font-size:14px" onclick="deletePost('${p.id}')">🗑️</button>` : ''}
+    </div>
+    ${p.text ? `<div class="post-text">${esc(p.text)}</div>` : ''}
+    ${p.image ? `<img class="post-img" src="${p.image}" loading="lazy">` : ''}
+    <div class="post-actions">
+      <button class="act ${liked?'liked':''}" onclick="toggleLike('${p.id}')">
+        <span>${liked?'❤️':'🤍'}</span>${p.likes.length||''}</button>
+      <button class="act" onclick="toggleComments('${p.id}')"><span>💬</span>${p.comments.length||''}</button>
+      <button class="act" onclick="sharePost('${p.id}')"><span>🔗</span></button>
+    </div>
+    <div class="comments" id="c-${p.id}">
+      ${p.comments.map(c => {
+        const u = user(c.userId) || {name:'?',avatar:'❓'};
+        return `<div class="cmt"><div class="avatar xs">${u.avatar}</div>
+          <div class="body"><b>${esc(u.name)}</b>${esc(c.text)}</div></div>`;
+      }).join('')}
+      <div class="cmt-input">
+        <div class="avatar xs" style="align-self:center">${me().avatar}</div>
+        <input id="ci-${p.id}" placeholder="Tulis komentar..." maxlength="150"
+          onkeydown="if(event.key==='Enter')addComment('${p.id}')">
+        <button onclick="addComment('${p.id}')">➤</button>
+      </div>
+    </div>`;
+  return el;
+}
+
+function toggleLike(id){
+  const p = state.posts.find(x => x.id === id); if (!p) return;
+  const meId = getMeId();
+  const i = p.likes.indexOf(meId);
+  if (i >= 0) p.likes.splice(i, 1);
+  else { p.likes.push(meId); if (p.authorId !== meId) pushNotif(p.authorId, 'like', { by: meId, postId: p.id }); }
+  saveState(); broadcast('post'); render();
+}
+function toggleComments(id){ $('c-'+id)?.classList.toggle('open'); }
+function addComment(id){
+  const inp = $('ci-' + id); if (!inp) return;
+  const text = inp.value.trim(); if (!text) return;
+  const p = state.posts.find(x => x.id === id); if (!p) return;
+  p.comments.push({ userId: getMeId(), text, time: Date.now() });
+  if (p.authorId !== getMeId()) pushNotif(p.authorId, 'comment', { by: getMeId(), postId: p.id, text });
+  inp.value = ''; saveState(); broadcast('post'); render();
+  setTimeout(() => $('c-'+id)?.classList.add('open'), 30);
+}
+function deletePost(id){
+  if (!confirm('Hapus postingan ini?')) return;
+  state.posts = state.posts.filter(x => x.id !== id);
+  saveState(); broadcast('post'); render(); toast('Postingan dihapus');
+}
+function sharePost(id){
+  const p = state.posts.find(x => x.id === id); if (!p) return;
+  const txt = (p.text || '[Foto]') + ' — dari Temu Kawan';
+  if (navigator.share) navigator.share({ title:'Temu Kawan', text: txt }).catch(()=>{});
+  else { navigator.clipboard?.writeText(txt); toast('Teks dicopy 📋'); }
+}
+
+/* ============================================================
+   COMPOSE
+============================================================ */
+function openCompose(){
+  pendingImage = null;
+  const m = document.createElement('div');
+  m.className = 'modal-bg open'; m.id = 'composeModal';
+  m.innerHTML = `<div class="modal">
+    <h3>✍️ Buat Postingan</h3>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;">
+      <div class="avatar sm">${me().avatar}</div>
+      <div style="font-weight:700">${esc(me().name)}</div>
+    </div>
+    <textarea class="field" id="compText" placeholder="Apa yang kamu pikirkan?" maxlength="500"
+      style="min-height:100px;resize:none;"></textarea>
+    <div class="img-prev" id="imgPrev"><img id="imgPrevEl">
+      <button onclick="removeComposeImage()">✕</button></div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button class="mini-btn" style="flex:1;padding:11px;" onclick="document.getElementById('compFile').click()">📷 Foto</button>
+      <input type="file" id="compFile" accept="image/*" style="display:none">
+    </div>
+    <button class="btn" id="compPost" disabled>Posting</button>
+    <button class="btn sec" onclick="closeCompose()" style="margin-top:8px;">Batal</button>
+  </div>`;
+  m.onclick = e => { if (e.target === m) closeCompose(); };
+  document.body.appendChild(m);
+  const text = $('compText'), btn = $('compPost');
+  text.addEventListener('input', () => { btn.disabled = !text.value.trim() && !pendingImage; });
+  text.focus();
+  $('compFile').onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { pendingImage = await resizeImg(f); $('imgPrevEl').src = pendingImage;
+      $('imgPrev').classList.add('show'); btn.disabled = false; }
+    catch { toast('Gagal memuat gambar'); }
+  };
+  btn.onclick = () => {
+    const t = text.value.trim();
+    if (!t && !pendingImage) return;
+    state.posts.unshift({
+      id: uid('p'), authorId: getMeId(), text: t, image: pendingImage,
+      likes: [], comments: [], time: Date.now()
+    });
+    (me().followers||[]).forEach(fid => {
+      if (state.users[fid] && !state.users[fid].isBot)
+        pushNotif(fid, 'post', { by: getMeId(), postId: state.posts[0].id });
+    });
+    saveState(); broadcast('post'); closeCompose(); go('feed');
+    toast('Postingan dibuat! 🎉');
+  };
+}
+function removeComposeImage(){
+  pendingImage = null; $('imgPrev').classList.remove('show');
+  const t = $('compText'); $('compPost').disabled = !t.value.trim();
+}
+function closeCompose(){ $('composeModal')?.remove(); pendingImage = null; }
+
+/* ============================================================
+   STORY
+============================================================ */
+let storyEmoji = '😊';
+function openStoryCreator(){
+  storyEmoji = '😊';
+  const m = document.createElement('div');
+  m.className = 'modal-bg open'; m.id = 'storyModal';
+  m.innerHTML = `<div class="modal">
+    <h3>✨ Buat Status</h3>
+    <p style="font-size:13px;color:#94a3b8;text-align:center;margin-bottom:14px;">Hilang otomatis setelah 24 jam</p>
+    <div class="emoji-pick" id="stEmoji">
+      ${['😊','😎','🔥','❤️','🎉','✨','☕','🌅','🎵','💪','🌈','🍕'].map((e,i)=>
+        `<button data-e="${e}" class="${i===0?'sel':''}">${e}</button>`).join('')}
+    </div>
+    <input class="field" id="stText" placeholder="Caption status..." maxlength="60">
+    <button class="btn" id="stBtn">Bagikan Status</button>
+    <button class="btn sec" onclick="document.getElementById('storyModal').remove()" style="margin-top:8px;">Batal</button>
+  </div>`;
+  m.onclick = e => { if (e.target === m) m.remove(); };
+  document.body.appendChild(m);
+  $('stEmoji').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $('stEmoji').querySelectorAll('button').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); storyEmoji = b.dataset.e;
+  };
+  $('stBtn').onclick = () => {
+    const txt = $('stText').value.trim();
+    if (!state.stories[getMeId()]) state.stories[getMeId()] = [];
+    state.stories[getMeId()].unshift({
+      id: uid('s'), emoji: storyEmoji, text: txt, time: Date.now(), seenBy: []
+    });
+    saveState(); broadcast('story'); m.remove();
+    toast('Status dibagikan! ✨'); render();
+  };
+}
+function openStoryViewer(userId){
+  const list = (state.stories[userId]||[])
+    .filter(s => Date.now()-s.time < 86400000).sort((a,b)=>a.time-b.time);
+  if (!list.length) return;
+  let idx = 0;
+  const u = user(userId);
+  const v = document.createElement('div');
+  v.className = 'story-view'; v.id = 'storyView';
+  document.body.appendChild(v);
+  function draw(){
+    const s = list[idx];
+    if (!s.seenBy) s.seenBy = [];
+    if (!s.seenBy.includes(getMeId())) s.seenBy.push(getMeId());
+    saveState();
+    v.innerHTML = `
+      <div class="bar">${list.map((_,i)=>
+        `<div class="seg"><div class="fill" style="width:${i<idx?'100%':'0%'}" id="segf-${i}"></div></div>`).join('')}</div>
+      <div class="head">
+        <div class="avatar sm">${u.avatar}</div>
+        <div><div class="name">${esc(u.name)}</div><div class="time">${timeAgo(s.time)}</div></div>
+      </div>
+      <button class="close" onclick="closeStory()">✕</button>
+      <div class="content" onclick="nextStory()"><div class="big">${s.emoji}</div></div>
+      ${s.text ? `<div class="caption">${esc(s.text)}</div>` : ''}`;
+    const f = $('segf-' + idx);
+    if (f) { f.style.transition = 'width 5s linear'; setTimeout(()=>f.style.width='100%',10); }
+    clearTimeout(storyTimer);
+    storyTimer = setTimeout(() => nextStory(), 5000);
+  }
+  window.nextStory = () => { if (idx < list.length-1) { idx++; draw(); } else closeStory(); };
+  window.prevStory = () => { if (idx > 0) { idx--; draw(); } };
+  window.closeStory = () => { clearTimeout(storyTimer); v.remove(); render(); };
+  draw();
+}
+
+/* ============================================================
+   SEARCH
+============================================================ */
+function renderSearch(root){
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<input class="field" id="srchInput" placeholder="🔍 Cari orang atau postingan...">`;
+  root.appendChild(wrap);
+  const result = document.createElement('div');
+  result.id = 'srchResult';
+  root.appendChild(result);
+  function draw(q = ''){
+    result.innerHTML = '';
+    const meId = getMeId();
+    const ql = q.toLowerCase();
+    const users = Object.values(state.users).filter(u =>
+      u.id !== meId && (!q || u.name.toLowerCase().includes(ql) ||
+        u.email?.toLowerCase().includes(ql) || (u.bio||'').toLowerCase().includes(ql))
+    );
+    const uh = document.createElement('div');
+    uh.className = 'section-title';
+    uh.innerHTML = `👥 Orang <span class="num">${users.length}</span>`;
+    result.appendChild(uh);
+    if (!users.length) {
+      result.innerHTML += `<div class="empty" style="padding:20px"><p>Tidak ditemukan</p></div>`;
+    } else {
+      users.slice(0, 30).forEach(u => {
+        const isF = me().following.includes(u.id);
+        const row = document.createElement('div');
+        row.className = 'user-row';
+        row.innerHTML = `
+          <div class="avatar ${isOnline(u.id)?'online':''}">${u.avatar}</div>
+          <div class="info">
+            <div class="name">${esc(u.name)}${u.isAdmin?'<span class="admin-badge">👑</span>':''}${u.isBot?'<span class="verify-badge">✓</span>':''}</div>
+            <div class="bio">${esc(u.bio||'')}</div>
+          </div>
+          <button class="mini-btn ${isF?'following':''}" onclick="event.stopPropagation();toggleFollow('${u.id}')">${isF?'✓':'+ Ikuti'}</button>`;
+        row.querySelector('.avatar').onclick = () => go('userprofile', { profileId: u.id });
+        row.querySelector('.info').onclick = () => go('userprofile', { profileId: u.id });
+        result.appendChild(row);
+      });
+    }
+    if (q) {
+      const posts = state.posts.filter(p => (p.text||'').toLowerCase().includes(ql))
+        .sort((a,b)=>b.time-a.time);
+      if (posts.length) {
+        const ph = document.createElement('div');
+        ph.className = 'section-title'; ph.style.marginTop = '14px';
+        ph.innerHTML = `📝 Postingan <span class="num">${posts.length}</span>`;
+        result.appendChild(ph);
+        posts.slice(0, 20).forEach(p => result.appendChild(buildPost(p)));
+      }
+    } else {
+      const tr = [...state.posts].sort((a,b)=>b.likes.length-a.likes.length).slice(0, 5);
+      const th = document.createElement('div');
+      th.className = 'section-title'; th.style.marginTop = '14px';
+      th.innerHTML = `🔥 Trending`;
+      result.appendChild(th);
+      tr.forEach(p => result.appendChild(buildPost(p)));
+    }
+  }
+  draw();
+  $('srchInput').addEventListener('input', e => draw(e.target.value.trim()));
+}
+
+/* ============================================================
+   FOLLOW
+============================================================ */
+function toggleFollow(userId){
+  if (userId === getMeId()) return;
+  const u = user(userId); if (!u) return;
+  const meU = me();
+  const i = meU.following.indexOf(userId);
+  if (i >= 0) {
+    meU.following.splice(i, 1);
+    u.followers = u.followers.filter(x => x !== getMeId());
+    toast(`Batal ikuti ${u.name}`);
+  } else {
+    meU.following.push(userId);
+    if (!u.followers.includes(getMeId())) u.followers.push(getMeId());
+    pushNotif(userId, 'follow', { by: getMeId() });
+    toast(`Mengikuti ${u.name} ✅`);
+    if (u.isBot && !u.following.includes(getMeId())) {
+      setTimeout(() => {
+        u.following.push(getMeId());
+        if (!meU.followers.includes(u.id)) meU.followers.push(u.id);
+        pushNotif(getMeId(), 'follow', { by: u.id });
+        saveState(); broadcast('follow');
+      }, 1500 + Math.random()*1500);
+    }
+  }
+  saveState(); broadcast('follow'); render();
+}
+
+/* ============================================================
+   PROFILE
+============================================================ */
+function renderProfile(root, userId, isMe){
+  const u = user(userId); if (!u) return;
+  const posts = state.posts.filter(p => p.authorId === userId).sort((a,b)=>b.time-a.time);
+  const isF = !isMe && me().following.includes(userId);
+  const hero = document.createElement('div');
+  hero.className = 'profile-hero';
+  hero.innerHTML = `
+    <div class="avatar lg">${u.avatar}</div>
+    <div class="pname">${esc(u.name)}</div>
+    <div class="pbio">${esc(u.bio||'—')}</div>
+    <div class="stats">
+      <div class="stat" onclick="showUserList('${userId}','followers')">
+        <div class="n">${(u.followers||[]).length}</div><div class="l">Pengikut</div></div>
+      <div class="stat"><div class="n">${posts.length}</div><div class="l">Postingan</div></div>
+      <div class="stat" onclick="showUserList('${userId}','following')">
+        <div class="n">${(u.following||[]).length}</div><div class="l">Ikuti</div></div>
+    </div>`;
+  root.appendChild(hero);
+
+  const info = document.createElement('div');
+  info.style.cssText = 'background:#fff;border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:var(--shadow);font-size:13px;';
+  info.innerHTML = `
+    ${u.email ? `<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span>📧</span><b style="color:#6366f1">${esc(u.email)}</b></div>` : ''}
+    <div style="display:flex;gap:8px;align-items:center;color:#94a3b8;font-size:12px">
+      <span>📅</span> Bergabung ${new Date(u.joinedAt).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}
+    </div>`;
+  root.appendChild(info);
+
+  const act = document.createElement('div');
+  act.style.cssText = 'display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;';
+  if (isMe) {
+    act.innerHTML = `
+      <button class="btn" style="flex:1;min-width:130px" onclick="openEditProfile()">✏️ Edit Profil</button>
+      ${u.isAdmin ? `<button class="btn" style="flex:1;min-width:130px;background:linear-gradient(135deg,#6366f1,#ec4899)" onclick="go('admin')">👑 Admin Panel</button>` : ''}
+      <button class="btn sec" style="flex:0 0 auto;padding:14px 18px" onclick="logout()">🚪</button>`;
+  } else {
+    act.innerHTML = `
+      <button class="mini-btn ${isF?'following':''}" style="flex:1;padding:14px;font-size:14px;border-radius:16px" onclick="toggleFollow('${userId}')">
+        ${isF?'✓ Mengikuti':'+ Ikuti'}</button>
+      <button class="btn" style="flex:1;min-width:100px" onclick="openChatWith('${userId}')">💬 Chat</button>
+      <button class="btn" style="flex:0 0 auto;padding:14px 18px;background:#10b981;box-shadow:0 8px 20px rgba(16,185,129,.3)" onclick="startVideoCall('${userId}')">📹</button>`;
+  }
+  root.appendChild(act);
+
+  if (!posts.length) {
+    root.innerHTML += `<div class="empty"><div class="big">📷</div><p>Belum ada postingan</p></div>`;
+  } else {
+    posts.forEach(p => root.appendChild(buildPost(p)));
+  }
+}
+
+function openEditProfile(){
+  let picked = me().avatar;
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = `<div class="modal">
+    <h3>✏️ Edit Profil</h3>
+    <label>Nama</label>
+    <input class="field" id="epName" maxlength="20" value="${esc(me().name)}">
+    <label>Email</label>
+    <input class="field" id="epEmail" type="email" value="${esc(me().email||'')}">
+    <label>Bio</label>
+    <input class="field" id="epBio" maxlength="80" value="${esc(me().bio||'')}">
+    <label>Avatar</label>
+    <div class="emoji-pick" id="epGrid">
+      ${AVATARS.map(e => `<button data-e="${e}" class="${e===me().avatar?'sel':''}">${e}</button>`).join('')}
+    </div>
+    <button class="btn" id="epSave">Simpan</button>
+    <button class="btn sec" onclick="this.closest('.modal-bg').remove()" style="margin-top:8px">Batal</button>
+  </div>`;
+  m.onclick = e => { if (e.target === m) m.remove(); };
+  document.body.appendChild(m);
+  $('epGrid').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    m.querySelectorAll('#epGrid button').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); picked = b.dataset.e;
+  };
+  $('epSave').onclick = () => {
+    me().name = $('epName').value.trim() || me().name;
+    me().email = $('epEmail').value.trim();
+    me().bio = $('epBio').value.trim();
+    me().avatar = picked;
+    saveState(); broadcast('user'); m.remove(); render();
+    toast('Profil diperbarui ✅');
+  };
+}
+function logout(){
+  if (!confirm('Keluar dari akun?')) return;
+  setMeId(null); view.screen = 'feed'; render();
+}
+function showUserList(userId, type){
+  const u = user(userId); if (!u) return;
+  const ids = u[type] || [];
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = `<div class="modal" style="max-height:80vh;overflow-y:auto">
+    <h3>${type==='followers'?'👥 Pengikut':'➡️ Mengikuti'}</h3>
+    ${!ids.length ? '<div class="empty" style="padding:20px"><p>Belum ada</p></div>' :
+      ids.map(id => {
+        const t = user(id); if (!t) return '';
+        const f = me().following.includes(id);
+        return `<div class="user-row">
+          <div class="avatar sm">${t.avatar}</div>
+          <div class="info" onclick="this.closest('.modal-bg').remove();go('userprofile',{profileId:'${id}'})">
+            <div class="name">${esc(t.name)}</div>
+            <div class="bio">${esc(t.bio||'')}</div></div>
+          ${id!==getMeId()?`<button class="mini-btn ${f?'following':''}" onclick="event.stopPropagation();toggleFollow('${id}');this.closest('.modal-bg').remove()">${f?'✓':'+'}</button>`:''}
+        </div>`;
+      }).join('')}
+    <button class="btn sec" onclick="this.closest('.modal-bg').remove()" style="margin-top:10px">Tutup</button>
+  </div>`;
+  m.onclick = e => { if (e.target === m) m.remove(); };
+  document.body.appendChild(m);
+}
+
+/* ============================================================
+   NOTIFIKASI
+============================================================ */
+function renderNotif(root){
+  const list = state.notifications[getMeId()] || [];
+  list.forEach(n => n.read = true);
+  saveState();
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = `🔔 Notifikasi`;
+  root.appendChild(h);
+  if (!list.length) {
+    root.innerHTML += `<div class="empty"><div class="big">🔕</div><h4>Belum ada notifikasi</h4><p>Aktivitas akan muncul di sini</p></div>`;
+    return;
+  }
+  list.forEach(n => {
+    const u = user(n.by); if (!u) return;
+    const div = document.createElement('div');
+    div.className = 'notif';
+    let text = '';
+    if (n.type === 'like') text = `<b>${esc(u.name)}</b> menyukai postinganmu`;
+    else if (n.type === 'comment') text = `<b>${esc(u.name)}</b> berkomentar: "${esc(n.text||'').slice(0,40)}"`;
+    else if (n.type === 'follow') text = `<b>${esc(u.name)}</b> mulai mengikuti kamu`;
+    else if (n.type === 'post') text = `<b>${esc(u.name)}</b> membuat postingan baru`;
+    else if (n.type === 'message') text = `<b>${esc(u.name)}</b> mengirim pesan`;
+    else if (n.type === 'group') text = `<b>${esc(u.name)}</b> ${esc(n.text||'aktivitas grup')}`;
+    div.innerHTML = `<div class="avatar sm">${u.avatar}</div>
+      <div class="body">${text}<div class="t">${timeAgo(n.time)}</div></div>`;
+    div.onclick = () => {
+      if (n.type === 'follow') go('userprofile', { profileId: u.id });
+      else if (n.type === 'message') go('chatroom', { chatWith: u.id });
+      else if (n.type === 'group' && n.groupId) go('groupchat', { groupId: n.groupId });
+      else go('feed');
+    };
+    root.appendChild(div);
+  });
+}
+
+/* ============================================================
+   CHAT LIST
+============================================================ */
+function renderChatList(root){
+  const meId = getMeId();
+  const tabs = document.createElement('div');
+  tabs.className = 'tabs';
+  tabs.innerHTML = `
+    <button class="tab active">💬 Personal</button>
+    <button class="tab" onclick="go('groups')">👥 Grup</button>`;
+  root.appendChild(tabs);
+
+  const ids = new Set([...me().following, ...me().followers]);
+  const users = [...ids].map(id => user(id)).filter(Boolean);
+  users.sort((a,b) => {
+    const ka = chatKey(meId, a.id), kb = chatKey(meId, b.id);
+    return (state.chats[kb]?.slice(-1)[0]?.time||0) - (state.chats[ka]?.slice(-1)[0]?.time||0);
+  });
+  if (!users.length) {
+    root.innerHTML += `<div class="empty"><div class="big">💬</div><h4>Belum ada chat</h4>
+      <p>Ikuti seseorang di tab Cari untuk mulai ngobrol</p></div>`;
+    return;
+  }
+  users.forEach(u => {
+    const key = chatKey(meId, u.id);
+    const msgs = state.chats[key] || [];
+    const last = msgs[msgs.length-1];
+    const unread = last && last.from !== meId && !(last.readBy||{})[meId];
+    const row = document.createElement('div');
+    row.className = 'user-row';
+    let preview = 'Mulai percakapan...';
+    if (last) {
+      if (last.type === 'image') preview = '📷 Foto';
+      else if (last.type === 'audio') preview = '🎤 Voice Note';
+      else preview = (last.from===meId?'Kamu: ':'') + esc((last.text||'').slice(0,35));
+    }
+    row.innerHTML = `
+      <div class="avatar ${isOnline(u.id)?'online':''}">${u.avatar}</div>
+      <div class="info">
+        <div class="name">${esc(u.name)}</div>
+        <div class="bio">${preview}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;color:#94a3b8">${last?timeAgo(last.time):''}</div>
+        ${unread?'<div class="chat-badge">Baru</div>':''}
+      </div>`;
+    row.onclick = () => go('chatroom', { chatWith: u.id });
+    root.appendChild(row);
+  });
+}
+function openChatWith(userId){ go('chatroom', { chatWith: userId }); }
+
+function renderChatRoom(root){
+  const meId = getMeId();
+  const u = user(view.chatWith); if (!u) { go('chat'); return; }
+  const key = chatKey(meId, u.id);
+  const msgs = state.chats[key] || [];
+  msgs.forEach(m => { if (!m.readBy) m.readBy = {}; m.readBy[meId] = true; });
+  saveState();
+
+  const hdr = document.createElement('div');
+  hdr.className = 'chat-header';
+  hdr.innerHTML = `
+    <button class="back-btn" onclick="go('chat')">←</button>
+    <div class="avatar ${isOnline(u.id)?'online':''}" onclick="go('userprofile',{profileId:'${u.id}'})">${u.avatar}</div>
+    <div style="flex:1">
+      <div class="name">${esc(u.name)}</div>
+      <div class="sub"><span class="dot ${isOnline(u.id)?'on':''}"></span>${isOnline(u.id)?'Online':'Terakhir '+timeAgo(u.lastSeen||u.joinedAt)}</div>
+    </div>
+    <button class="icon-btn" onclick="startVideoCall('${u.id}')" title="Video Call">📹</button>`;
+  root.appendChild(hdr);
+
+  const body = document.createElement('div');
+  body.className = 'chat-body'; body.id = 'chatBody';
+  if (!msgs.length) {
+    body.innerHTML = `<div style="text-align:center;color:#94a3b8;font-size:13px;padding:30px">
+      👋 Mulai percakapan dengan <b style="color:#6366f1">${esc(u.name)}</b></div>`;
+  } else {
+    msgs.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'bubble ' + (m.from === meId ? 'me' : 'them');
+      let content = '';
+      if (m.type === 'image') content = `<img src="${m.image}" alt="foto">`;
+      else if (m.type === 'audio') content = `<audio controls src="${m.audio}"></audio>`;
+      content += esc(m.text || '');
+      const seen = m.from === meId && m.readBy?.[u.id];
+      div.innerHTML = `${content}<span class="t">${timeFull(m.time)}${m.from===meId?`<span class="seen">${seen?'✓✓':'✓'}</span>`:''}</span>`;
+      body.appendChild(div);
+    });
+  }
+  const ti = document.createElement('div');
+  ti.id = 'typingIndicator';
+  body.appendChild(ti);
+  root.appendChild(body);
+
+  const row = document.createElement('div');
+  row.className = 'chat-input-row';
+  row.innerHTML = `
+    <button class="sm-btn" onclick="document.getElementById('chatImg').click()" title="Kirim foto">📷</button>
+    <input type="file" id="chatImg" accept="image/*" style="display:none">
+    <input id="chatInput" placeholder="Ketik pesan..." maxlength="300" autocomplete="off"
+      onkeydown="if(event.key==='Enter')sendMessage()">
+    <button class="sm-btn" id="micBtn" onclick="toggleRecord()" title="Voice note">🎤</button>
+    <button class="send" onclick="sendMessage()">➤</button>`;
+  root.appendChild(row);
+
+  $('chatImg').onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const img = await resizeImg(f, 900, 0.75);
+      sendMsg({ type:'image', image: img, text:'' });
+    } catch { toast('Gagal kirim gambar'); }
+  };
+
+  setTimeout(() => {
+    body.scrollTop = body.scrollHeight;
+    if (window.matchMedia('(min-width:768px)').matches) $('chatInput')?.focus();
+  }, 40);
+}
+
+function sendMessage(){
+  const inp = $('chatInput'); if (!inp) return;
+  const text = inp.value.trim(); if (!text) return;
+  sendMsg({ text });
+  inp.value = '';
+}
+
+function sendMsg(msgObj){
+  const meId = getMeId();
+  const u = user(view.chatWith); if (!u) return;
+  const key = chatKey(meId, u.id);
+  if (!state.chats[key]) state.chats[key] = [];
+  state.chats[key].push({
+    from: meId, ...msgObj, time: Date.now(), readBy: { [meId]: true }
+  });
+  saveState(); broadcast('chat');
+  renderChatRoom($('pageBody'));
+  pushNotif(u.id, 'message', { by: meId });
+  saveState();
+
+  if (u.isBot) {
+    setTimeout(() => {
+      const ti = $('typingIndicator');
+      if (ti) ti.innerHTML = `<div class="typing-ind"><span class="d"></span><span class="d"></span><span class="d"></span></div>`;
+      const b = $('chatBody'); if (b) b.scrollTop = b.scrollHeight;
+      setTimeout(() => {
+        const reply = BOT_REPLIES[Math.floor(Math.random()*BOT_REPLIES.length)];
+        state.chats[key].push({
+          from: u.id, text: reply, time: Date.now(), readBy: { [u.id]: true }
+        });
+        u.lastSeen = Date.now();
+        saveState(); broadcast('chat');
+        if (view.screen === 'chatroom' && view.chatWith === u.id) {
+          renderChatRoom($('pageBody')); playSound();
+        }
+      }, 900 + Math.random()*1200);
+    }, 500 + Math.random()*700);
+  }
+}
+
+/* ---------- VOICE NOTE ---------- */
+async function toggleRecord(){
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    mediaRecorder.stop();
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = async () => {
+      stream.getTracks().forEach(t => t.stop());
+      clearInterval(recordingTimer);
+      $('recOverlay')?.remove();
+      const blob = new Blob(audioChunks, { type:'audio/webm' });
+      if (blob.size < 500) { toast('Rekaman terlalu pendek'); return; }
+      // Convert to base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        const audio = reader.result;
+        if (audio.length > 900000) { toast('Rekaman terlalu panjang (>60dtk)'); return; }
+        sendMsg({ type:'audio', audio, text:'' });
+      };
+      reader.readAsDataURL(blob);
+      const btn = $('micBtn'); if (btn) btn.classList.remove('rec');
+    };
+    mediaRecorder.start();
+    recordingStart = Date.now();
+    const btn = $('micBtn'); if (btn) btn.classList.add('rec');
+    // Overlay
+    const ov = document.createElement('div');
+    ov.className = 'recording-overlay'; ov.id = 'recOverlay';
+    ov.innerHTML = `<div class="big">🎤</div>
+      <div class="timer" id="recTimer">0:00</div>
+      <div class="hint">Merekam voice note... (maks 60 dtk)</div>
+      <button class="stop-btn" onclick="toggleRecord()">⏹ Stop & Kirim</button>`;
+    document.body.appendChild(ov);
+    recordingTimer = setInterval(() => {
+      const s = Math.floor((Date.now() - recordingStart)/1000);
+      const t = $('recTimer'); if (t) t.textContent = Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+      if (s >= 60) toggleRecord();
+    }, 200);
+  } catch (e) {
+    toast('❌ Tidak bisa akses mikrofon');
+  }
+}
+
+/* ============================================================
+   GRUP
+============================================================ */
+function renderGroupsList(root){
+  const meId = getMeId();
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = `👥 Grup Saya`;
+  root.appendChild(h);
+
+  const groups = Object.values(state.groups).filter(g => g.members.includes(meId));
+
+  const createBtn = document.createElement('button');
+  createBtn.className = 'btn';
+  createBtn.style.marginBottom = '14px';
+  createBtn.textContent = '➕ Buat Grup Baru';
+  createBtn.onclick = openCreateGroup;
+  root.appendChild(createBtn);
+
+  if (!groups.length) {
+    root.innerHTML += `<div class="empty"><div class="big">👥</div>
+      <h4>Belum ada grup</h4><p>Buat grup untuk ngobrol bareng teman-temanmu</p></div>`;
+    return;
+  }
+
+  groups.forEach(g => {
+    const div = document.createElement('div');
+    div.className = 'group-item';
+    const last = g.messages[g.messages.length-1];
+    div.innerHTML = `
+      <div class="gic">${g.emoji || '👥'}</div>
+      <div class="info">
+        <div class="name">${esc(g.name)}</div>
+        <div class="sub">${g.members.length} anggota${last?` • ${esc((last.text||'[Media]').slice(0,25))}`:''}</div>
+      </div>`;
+    div.onclick = () => go('groupchat', { groupId: g.id });
+    root.appendChild(div);
+  });
+}
+
+function openCreateGroup(){
+  let emoji = '👥';
+  let selectedMembers = [];
+  const friendIds = [...new Set([...me().following, ...me().followers])]
+    .map(id => user(id)).filter(u => u && u.id !== getMeId());
+
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = `<div class="modal">
+    <h3>➕ Buat Grup Baru</h3>
+    <input class="field" id="gName" placeholder="Nama grup" maxlength="30">
+    <label>Emoji</label>
+    <div class="emoji-pick" id="gEmoji">
+      ${['👥','🌟','🔥','🎮','📚','🎵','⚽','🍕','💼','🎨','🐱','🌸'].map((e,i)=>
+        `<button data-e="${e}" class="${i===0?'sel':''}">${e}</button>`).join('')}
+    </div>
+    <label>Pilih anggota (${friendIds.length} tersedia)</label>
+    <div id="gMembers" style="max-height:200px;overflow-y:auto;margin-bottom:14px;">
+      ${friendIds.length === 0 ? '<p style="color:#94a3b8;font-size:13px;padding:10px">Belum ada teman. Ikuti orang dulu.</p>' :
+        friendIds.map(u => `
+          <div class="user-row" data-id="${u.id}" style="margin-bottom:6px">
+            <div class="avatar sm">${u.avatar}</div>
+            <div class="info"><div class="name">${esc(u.name)}</div>
+              <div class="bio">${esc(u.bio||'')}</div></div>
+            <div class="chk" style="width:24px;height:24px;border-radius:50%;border:2px solid #e2e8f0;
+              display:flex;align-items:center;justify-content:center;flex-shrink:0">✓</div>
+          </div>`).join('')}
+    </div>
+    <button class="btn" id="gCreate">Buat Grup</button>
+    <button class="btn sec" onclick="this.closest('.modal-bg').remove()" style="margin-top:8px">Batal</button>
+  </div>`;
+  m.onclick = e => { if (e.target === m) m.remove(); };
+  document.body.appendChild(m);
+
+  $('gEmoji').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $('gEmoji').querySelectorAll('button').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); emoji = b.dataset.e;
+  };
+  $('gMembers').onclick = e => {
+    const row = e.target.closest('.user-row'); if (!row) return;
+    const chk = row.querySelector('.chk');
+    const id = row.dataset.id;
+    const i = selectedMembers.indexOf(id);
+    if (i >= 0) { selectedMembers.splice(i,1); chk.style.background=''; chk.style.color=''; }
+    else { selectedMembers.push(id); chk.style.background='#6366f1'; chk.style.color='#fff'; }
+  };
+  $('gCreate').onclick = () => {
+    const name = $('gName').value.trim();
+    if (!name) return toast('Isi nama grup');
+    if (!selectedMembers.length) return toast('Pilih minimal 1 anggota');
+    const gid = uid('g_');
+    state.groups[gid] = {
+      id: gid, name, emoji,
+      members: [getMeId(), ...selectedMembers],
+      admins: [getMeId()],
+      createdBy: getMeId(), createdAt: Date.now(),
+      messages: [{
+        id: uid('gm'), from: getMeId(),
+        text:`Grup "${name}" dibuat`, time: Date.now(), system:true
+      }]
+    };
+    selectedMembers.forEach(mid => {
+      if (state.users[mid] && !state.users[mid].isBot)
+        pushNotif(mid, 'group', { by: getMeId(), groupId: gid, text:`mengundang kamu ke grup "${name}"` });
+    });
+    saveState(); broadcast('group'); m.remove();
+    toast('Grup dibuat! 🎉'); go('groupchat', { groupId: gid });
+  };
+}
+
+function renderGroupChat(root){
+  const meId = getMeId();
+  const g = state.groups[view.groupId]; if (!g) { go('groups'); return; }
+  const hdr = document.createElement('div');
+  hdr.className = 'chat-header';
+  hdr.innerHTML = `
+    <button class="back-btn" onclick="go('groups')">←</button>
+    <div class="gic" style="width:44px;height:44px;border-radius:14px;background:var(--grad);
+      color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px">${g.emoji||'👥'}</div>
+    <div style="flex:1">
+      <div class="name">${esc(g.name)}</div>
+      <div class="sub">${g.members.length} anggota</div>
+    </div>
+    <button class="icon-btn" onclick="showGroupInfo('${g.id}')">ℹ️</button>`;
+  root.appendChild(hdr);
+
+  const body = document.createElement('div');
+  body.className = 'chat-body'; body.id = 'chatBody';
+  g.messages.forEach(m => {
+    const div = document.createElement('div');
+    if (m.system) {
+      div.style.cssText = 'text-align:center;font-size:12px;color:#94a3b8;padding:6px;';
+      const u = user(m.from) || { name:'?' };
+      div.textContent = `${u.name} ${m.text}`;
+    } else {
+      const isMe = m.from === meId;
+      const u = user(m.from) || { name:'?', avatar:'❓' };
+      div.className = 'bubble ' + (isMe?'me':'them');
+      let content = '';
+      if (!isMe) content += `<div style="font-size:11px;font-weight:700;color:#6366f1;margin-bottom:4px">${esc(u.name)}</div>`;
+      if (m.type === 'image') content += `<img src="${m.image}">`;
+      else if (m.type === 'audio') content += `<audio controls src="${m.audio}"></audio>`;
+      content += esc(m.text||'');
+      content += `<span class="t">${timeFull(m.time)}</span>`;
+      div.innerHTML = content;
+    }
+    body.appendChild(div);
+  });
+  root.appendChild(body);
+
+  const row = document.createElement('div');
+  row.className = 'chat-input-row';
+  row.innerHTML = `
+    <button class="sm-btn" onclick="document.getElementById('grpImg').click()">📷</button>
+    <input type="file" id="grpImg" accept="image/*" style="display:none">
+    <input id="chatInput" placeholder="Ketik pesan ke grup..." maxlength="300" autocomplete="off"
+      onkeydown="if(event.key==='Enter')sendGroupMessage()">
+    <button class="send" onclick="sendGroupMessage()">➤</button>`;
+  root.appendChild(row);
+
+  $('grpImg').onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const img = await resizeImg(f, 900, 0.75);
+      g.messages.push({ id: uid('gm'), from: meId, type:'image', image: img, time: Date.now() });
+      saveState(); broadcast('group');
+      renderGroupChat($('pageBody'));
+    } catch { toast('Gagal kirim gambar'); }
+  };
+
+  setTimeout(() => { body.scrollTop = body.scrollHeight; }, 40);
+}
+
+function sendGroupMessage(){
+  const inp = $('chatInput'); if (!inp) return;
+  const text = inp.value.trim(); if (!text) return;
+  const g = state.groups[view.groupId]; if (!g) return;
+  g.messages.push({ id: uid('gm'), from: getMeId(), text, time: Date.now() });
+  inp.value = '';
+  saveState(); broadcast('group');
+  renderGroupChat($('pageBody'));
+
+  // Bot replies
+  const bots = g.members.filter(mid => state.users[mid]?.isBot);
+  if (bots.length) {
+    const botId = bots[Math.floor(Math.random()*bots.length)];
+    setTimeout(() => {
+      const bot = state.users[botId];
+      const reply = BOT_REPLIES[Math.floor(Math.random()*BOT_REPLIES.length)];
+      g.messages.push({ id: uid('gm'), from: botId, text: reply, time: Date.now() });
+      saveState(); broadcast('group');
+      if (view.screen === 'groupchat' && view.groupId === g.id) {
+        renderGroupChat($('pageBody')); playSound();
+      }
+    }, 1200 + Math.random()*1500);
+  }
+}
+
+function showGroupInfo(gid){
+  const g = state.groups[gid]; if (!g) return;
+  const m = document.createElement('div');
+  m.className = 'modal-bg open';
+  m.innerHTML = `<div class="modal" style="max-height:80vh;overflow-y:auto">
+    <h3>${g.emoji||'👥'} ${esc(g.name)}</h3>
+    <p style="text-align:center;font-size:13px;color:#94a3b8;margin-bottom:14px">
+      ${g.members.length} anggota • Dibuat ${timeAgo(g.createdAt)}</p>
+    <label>Anggota</label>
+    ${g.members.map(id => {
+      const u = user(id); if (!u) return '';
+      const isAdminG = g.admins.includes(id);
+      return `<div class="user-row">
+        <div class="avatar sm">${u.avatar}</div>
+        <div class="info">
+          <div class="name">${esc(u.name)}${isAdminG?'<span style="background:#fbbf24;color:#78350f;font-size:9px;padding:1px 6px;border-radius:6px;font-weight:800;margin-left:4px">ADMIN</span>':''}</div>
+          <div class="bio">${esc(u.bio||'')}</div></div>
+      </div>`;
+    }).join('')}
+    ${g.createdBy === getMeId() || me().isAdmin ?
+      `<button class="btn" style="background:#ef4444;margin-top:10px" onclick="if(confirm('Hapus grup ini?')){delete state.groups['${gid}'];saveState();broadcast('group');go('groups');this.closest('.modal-bg').remove();}">🗑️ Hapus Grup</button>` : ''}
+    <button class="btn sec" onclick="this.closest('.modal-bg').remove()" style="margin-top:8px">Tutup</button>
+  </div>`;
+  m.onclick = e => { if (e.target === m) m.remove(); };
+  document.body.appendChild(m);
+}
+
+/* ============================================================
+   VIDEO CALL (WebRTC via BroadcastChannel — same browser only)
+============================================================ */
+let pc = null, localStream = null, callTarget = null, callRole = null;
+
+async function startVideoCall(userId){
+  const u = user(userId); if (!u) return;
+  if (!navigator.mediaDevices?.getUserMedia) {
+    toast('❌ Browser tidak support kamera');
+    return;
+  }
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
+  } catch (e) {
+    toast('❌ Tidak bisa akses kamera/mic');
+    return;
+  }
+  callTarget = userId;
+  callRole = 'caller';
+  showVideoCallUI(u, false);
+  try {
+    pc = new RTCPeerConnection({
+      iceServers: [{ urls:'stun:stun.l.google.com:19302' }]
+    });
+    localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
+    pc.ontrack = e => {
+      const remote = $('remoteVideo');
+      if (remote && e.streams[0]) remote.srcObject = e.streams[0];
+    };
+    pc.onicecandidate = e => {
+      if (e.candidate) channel.postMessage({ type:'rtc_ice', from:TAB_ID, to:userId, candidate:e.candidate });
+    };
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    channel.postMessage({ type:'rtc_offer', from:TAB_ID, to:userId, offer });
+    toast('📞 Memanggil ' + u.name + '...');
+  } catch (e) {
+    toast('❌ Gagal memulai panggilan');
+    endCall();
+  }
+}
+
+// Handle incoming RTC messages
+const originalHandler = channel.onmessage;
+channel.onmessage = async (e) => {
+  const d = e.data;
+  if (d.from === TAB_ID) return;
+
+  // RTC signaling
+  if (d.type === 'rtc_offer' && d.to === getMeId()) {
+    if (!confirm('📞 Panggilan video dari ' + (user(d.from)?.name || '?') + '\n\nTerima?')) {
+      channel.postMessage({ type:'rtc_reject', from:TAB_ID, to:d.from });
+      return;
+    }
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
+      callTarget = d.from; callRole = 'callee';
+      showVideoCallUI(user(d.from), false);
+      pc = new RTCPeerConnection({ iceServers:[{ urls:'stun:stun.l.google.com:19302' }] });
+      localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
+      pc.ontrack = ev => {
+        const remote = $('remoteVideo');
+        if (remote && ev.streams[0]) remote.srcObject = ev.streams[0];
+      };
+      pc.onicecandidate = ev => {
+        if (ev.candidate) channel.postMessage({ type:'rtc_ice', from:TAB_ID, to:d.from, candidate:ev.candidate });
+      };
+      await pc.setRemoteDescription(d.offer);
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      channel.postMessage({ type:'rtc_answer', from:TAB_ID, to:d.from, answer });
+      $('callStatus').textContent = 'Terhubung';
+    } catch (err) {
+      toast('❌ Gagal terima panggilan');
+      endCall();
+    }
+    return;
+  }
+  if (d.type === 'rtc_answer' && d.to === getMeId() && pc) {
+    try { await pc.setRemoteDescription(d.answer); $('callStatus').textContent = 'Terhubung'; } catch(e){}
+    return;
+  }
+  if (d.type === 'rtc_ice' && d.to === getMeId() && pc && d.candidate) {
+    try { await pc.addIceCandidate(d.candidate); } catch(e){}
+    return;
+  }
+  if (d.type === 'rtc_reject' && d.to === getMeId()) {
+    toast('📵 Panggilan ditolak');
+    endCall();
+    return;
+  }
+  if (d.type === 'rtc_end' && d.to === getMeId()) {
+    toast('📴 Panggilan berakhir');
+    endCall();
+    return;
+  }
+
+  // Regular sync
+  if (originalHandler) originalHandler(e);
+};
+
+function showVideoCallUI(u, muted){
+  const v = document.createElement('div');
+  v.className = 'video-call'; v.id = 'videoCall';
+  v.innerHTML = `
+    <div class="stage">
+      <div class="waiting" id="callWaiting">
+        <div class="avatar">${u?.avatar||'?'}</div>
+        <div class="txt" id="callStatus">Memanggil ${esc(u?.name||'')}...</div>
+      </div>
+      <video class="remote" id="remoteVideo" autoplay playsinline style="display:none"></video>
+      <video class="local" id="localVideo" autoplay playsinline muted></video>
+      <div class="info"><div class="name">${esc(u?.name||'')}</div>
+        <div class="status" id="callDuration">00:00</div></div>
+    </div>
+    <div class="controls">
+      <button class="ctrl" id="muteBtn" onclick="toggleMute()">🎤</button>
+      <button class="ctrl" id="camBtn" onclick="toggleCam()">📹</button>
+      <button class="ctrl end" onclick="endCall()">📴</button>
+    </div>`;
+  document.body.appendChild(v);
+  const local = $('localVideo');
+  if (local && localStream) local.srcObject = localStream;
+
+  // Show remote after connected
+  const obs = setInterval(() => {
+    const rv = $('remoteVideo'), w = $('callWaiting');
+    if (rv && rv.srcObject) {
+      rv.style.display = 'block';
+      if (w) w.style.display = 'none';
+      clearInterval(obs);
+    }
+  }, 500);
+
+  // Duration
+  let sec = 0;
+  const t = setInterval(() => {
+    if (!document.getElementById('videoCall')) { clearInterval(t); return; }
+    const el = $('callDuration');
+    if (el && el.textContent !== 'Memanggil...') {
+      sec++;
+      el.textContent = Math.floor(sec/60).toString().padStart(2,'0') + ':' + (sec%60).toString().padStart(2,'0');
+    }
+  }, 1000);
+}
+
+function toggleMute(){
+  if (!localStream) return;
+  const t = localStream.getAudioTracks()[0]; if (!t) return;
+  t.enabled = !t.enabled;
+  const b = $('muteBtn');
+  if (b) { b.classList.toggle('mute', !t.enabled); b.textContent = t.enabled ? '🎤' : '🔇'; }
+}
+function toggleCam(){
+  if (!localStream) return;
+  const t = localStream.getVideoTracks()[0]; if (!t) return;
+  t.enabled = !t.enabled;
+  const b = $('camBtn');
+  if (b) { b.classList.toggle('mute', !t.enabled); b.textContent = t.enabled ? '📹' : '📵'; }
+  const lv = $('localVideo'); if (lv) lv.style.opacity = t.enabled ? '1' : '0.3';
+}
+function endCall(){
+  if (callTarget) channel.postMessage({ type:'rtc_end', from:TAB_ID, to:callTarget });
+  if (pc) { try { pc.close(); } catch(e){} pc = null; }
+  if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+  $('videoCall')?.remove();
+  callTarget = null;
+}
+
+/* ============================================================
+   ADMIN PANEL
+============================================================ */
+function renderAdmin(root){
+  if (!me().isAdmin) { root.innerHTML = '<div class="empty"><div class="big">⛔</div><p>Akses ditolak</p></div>'; return; }
+
+  const users = Object.values(state.users);
+  const realUsers = users.filter(u => !u.isBot);
+  const bots = users.filter(u => u.isBot);
+  const totalPosts = state.posts.length;
+  const totalMsgs = Object.values(state.chats).reduce((a,c) => a+c.length, 0)
+    + Object.values(state.groups).reduce((a,g) => a+g.messages.length, 0);
+
+  const h = document.createElement('div');
+  h.className = 'section-title';
+  h.innerHTML = `👑 Admin Panel — Temu Kawan`;
+  root.appendChild(h);
+
+  const grid = document.createElement('div');
+  grid.className = 'admin-grid';
+  grid.innerHTML = `
+    <div class="admin-stat"><div class="n">${realUsers.length}</div><div class="l">User Asli</div></div>
+    <div class="admin-stat"><div class="n">${bots.length}</div><div class="l">Bot</div></div>
+    <div class="admin-stat"><div class="n">${totalPosts}</div><div class="l">Postingan</div></div>
+    <div class="admin-stat"><div class="n">${totalMsgs}</div><div class="l">Pesan</div></div>
+    <div class="admin-stat"><div class="n">${Object.keys(state.groups).length}</div><div class="l">Grup</div></div>
+    <div class="admin-stat"><div class="n">${state.posts.reduce((a,p)=>a+p.likes.length,0)}</div><div class="l">Total Like</div></div>`;
+  root.appendChild(grid);
+
+  // User list
+  const uh = document.createElement('div');
+  uh.className = 'section-title';
+  uh.style.marginTop = '14px';
+  uh.innerHTML = `📋 Daftar Pengguna <span class="num">${realUsers.length}</span>`;
+  root.appendChild(uh);
+
+  realUsers.sort((a,b) => b.joinedAt - a.joinedAt).forEach(u => {
+    const row = document.createElement('div');
+    row.className = 'user-row';
+    const lastSeen = u.lastSeen ? timeAgo(u.lastSeen) : '—';
+    const online = isOnline(u.id);
+    row.innerHTML = `
+      <div class="avatar ${online?'online':''}">${u.avatar}</div>
+      <div class="info">
+        <div class="name">${esc(u.name)}${u.isAdmin?'<span class="admin-badge">👑 OWNER</span>':''}</div>
+        <div class="bio">📧 ${esc(u.email||'—')}</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px;">
+          📅 ${new Date(u.joinedAt).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+          ${online?' • <b style="color:#10b981">online</b>':` • terakhir ${lastSeen}`}
+        </div>
+      </div>
+      <button class="mini-btn" style="background:#f1f5f9;color:#ef4444;padding:8px 10px"
+        onclick="event.stopPropagation();adminDeleteUser('${u.id}')">🗑️</button>`;
+    row.querySelector('.avatar').onclick = () => go('userprofile', { profileId: u.id });
+    row.querySelector('.info').onclick = () => go('userprofile', { profileId: u.id });
+    root.appendChild(row);
+  });
+
+  // Recent activity
+  const ah = document.createElement('div');
+  ah.className = 'section-title';
+  ah.style.marginTop = '14px';
+  ah.innerHTML = `🕒 Aktivitas Terbaru`;
+  root.appendChild(ah);
+
+  const allActivity = [
+    ...state.posts.map(p => ({ type:'post', time:p.time, userId:p.authorId, text:'membuat postingan' })),
+    ...Object.entries(state.chats).flatMap(([k, msgs]) => msgs.map(m => ({
+      type:'chat', time:m.time, userId:m.from, text:'mengirim pesan'
+    })))
+  ].sort((a,b) => b.time - a.time).slice(0, 15);
+
+  allActivity.forEach(a => {
+    const u = user(a.userId); if (!u) return;
+    const div = document.createElement('div');
+    div.className = 'notif';
+    div.innerHTML = `<div class="avatar xs">${u.avatar}</div>
+      <div class="body"><b>${esc(u.name)}</b> ${a.text}<div class="t">${timeAgo(a.time)}</div></div>`;
+    root.appendChild(div);
+  });
+
+  // Danger zone
+  const dz = document.createElement('div');
+  dz.style.marginTop = '20px';
+  dz.innerHTML = `
+    <button class="btn" style="background:#ef4444;box-shadow:none" onclick="adminClearAll()">🗑️ Hapus Semua Postingan</button>
+    <button class="btn sec" style="margin-top:8px" onclick="adminExport()">📥 Export Data (JSON)</button>`;
+  root.appendChild(dz);
+}
+
+function adminDeleteUser(id){
+  if (id === getMeId()) return toast('Tidak bisa hapus diri sendiri');
+  const u = state.users[id]; if (!u) return;
+  if (!confirm(`Hapus user "${u.name}"?\n\nSemua postingan & chat terkait juga akan dihapus.`)) return;
+  delete state.users[id];
+  state.posts = state.posts.filter(p => p.authorId !== id);
+  Object.keys(state.chats).forEach(k => { if (k.includes(id)) delete state.chats[k]; });
+  Object.values(state.users).forEach(x => {
+    x.following = x.following.filter(f => f !== id);
+    x.followers = x.followers.filter(f => f !== id);
+  });
+  saveState(); broadcast('user'); toast('User dihapus'); render();
+}
+function adminClearAll(){
+  if (!confirm('Hapus SEMUA postingan? Tidak bisa dibatalkan!')) return;
+  state.posts = [];
+  saveState(); broadcast('post'); toast('Semua postingan dihapus'); render();
+}
+function adminExport(){
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'temu-kawan-data-' + Date.now() + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  toast('Data diexport 📥');
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+state = loadState();
+seed();
+render();
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) { state = loadState(); render(); }
+});
+setInterval(() => {
+  if (getMeId() && ['feed','chat','chatroom','profile','userprofile','groups'].includes(view.screen)) render();
+}, 20000);
+</script>
+</body>
+</html>
